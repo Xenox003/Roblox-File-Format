@@ -57,6 +57,11 @@ namespace RobloxFiles
         public string XmlToken { get; internal set; }
         public byte[] RawBuffer { get; internal set; }
 
+        // Verbatim PROP payload for property types this library can't parse. It covers every
+        // object of the class, so it is only valid while the class keeps the same object count.
+        internal byte[] UnknownPayload;
+        internal int UnknownObjectCount;
+
         internal object RawValue;
         
         internal static BindingFlags BindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.IgnoreCase;

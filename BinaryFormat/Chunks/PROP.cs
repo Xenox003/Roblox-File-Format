@@ -718,7 +718,20 @@ namespace RobloxFiles.BinaryFormat.Chunks
                 }
                 default:
                 {
-                    RobloxFile.LogError($"Unhandled property type: {Type} in {this}!");
+                    // Unknown (likely newer) property type: keep the bytes so Save can round-trip them.
+                    var stream = reader.BaseStream;
+                    int remaining = (int)(stream.Length - stream.Position);
+                    byte[] payload = reader.ReadBytes(remaining);
+
+                    foreach (var prop in props)
+                    {
+                        if (prop == null)
+                            continue;
+
+                        prop.UnknownPayload = payload;
+                        prop.UnknownObjectCount = objCount;
+                    }
+
                     break;
                 }
             }
@@ -1422,7 +1435,12 @@ namespace RobloxFiles.BinaryFormat.Chunks
                 }
                 default:
                 {
-                    RobloxFile.LogError($"Unhandled property type: {Type} in {this}!");
+                    byte[] payload = props.Count > 0 ? props[0].UnknownPayload : null;
+
+                    if (payload == null || props[0].UnknownObjectCount != props.Count)
+                        throw new Exception($"Unhandled property type: {Type} in {this}, and its original data can't be reused!");
+
+                    writer.Write(payload);
                     break;
                 }
             }
