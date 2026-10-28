@@ -1006,6 +1006,8 @@ namespace RobloxFiles.BinaryFormat.Chunks
 
                         if (prop.Value is Quaternion q)
                             value = q.ToCFrame();
+                        else if (prop.Value is Optional<CFrame> optional)
+                            value = optional.Value;
                         else
                             value = prop.CastValue<CFrame>();
 

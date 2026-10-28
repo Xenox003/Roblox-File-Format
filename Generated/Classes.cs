@@ -4735,7 +4735,7 @@ namespace RobloxFiles
         public BasePart PrimaryPart;
         public float ScaleFactor = 1;
         public SharedString SlimHash;
-        public CFrame WorldPivotData;
+        public Optional<CFrame> WorldPivotData;
     }
 
     public class Actor : Model
